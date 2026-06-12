@@ -2,7 +2,7 @@
   <header class="dashboard-header">
     <div class="dashboard-header__deco dashboard-header__deco--left" />
     <div class="dashboard-header__center">
-      <h1 class="dashboard-header__title">机床加工厂 OEE 统计大屏</h1>
+      <h1 class="dashboard-header__title">OEE统计大屏</h1>
       <p class="dashboard-header__subtitle">Overall Equipment Effectiveness Dashboard</p>
     </div>
     <div class="dashboard-header__deco dashboard-header__deco--right" />

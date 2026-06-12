@@ -1,0 +1,31 @@
+// 大屏设计稿基准尺寸
+$design-width: 1920px;
+$design-height: 1080px;
+
+// 主题色
+$color-primary: #00d4ff;
+$color-secondary: #0066ff;
+$color-accent: #00ffcc;
+$color-warning: #ffaa00;
+$color-danger: #ff4d6a;
+
+// 背景与面板
+$color-bg: #0a1628;
+$color-panel-bg: rgba(6, 30, 60, 0.75);
+$color-panel-border: rgba(0, 212, 255, 0.35);
+$color-text: #e8f4ff;
+$color-text-secondary: rgba(232, 244, 255, 0.65);
+
+// 字体
+$font-family: 'PingFang SC', 'Microsoft YaHei', 'Helvetica Neue', Arial, sans-serif;
+$font-size-title: 36px;
+$font-size-subtitle: 20px;
+$font-size-base: 14px;
+
+// 时间轴状态色
+$color-production: #00e5a0;
+$color-face-change: #ffaa00;
+$color-production-change: #7b61ff;
+$color-fault: #ff4d6a;
+$color-personnel-loss: #ff6b9d;
+$color-face-change-op: #ffd666;

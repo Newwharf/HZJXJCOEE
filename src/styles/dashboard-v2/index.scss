@@ -1,0 +1,34 @@
+@use './variables' as *;
+
+.dashboard-v2-screen {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background: $v2-bg;
+  font-family: $v2-font;
+  font-size: 14px;
+  line-height: 1.5;
+  color: $v2-text;
+  -webkit-font-smoothing: antialiased;
+}
+
+.dashboard-v2-scale {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: $v2-design-width;
+  height: $v2-design-height;
+  transform-origin: center center;
+  z-index: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dashboard-v2-screen *,
+  .dashboard-v2-screen *::before,
+  .dashboard-v2-screen *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

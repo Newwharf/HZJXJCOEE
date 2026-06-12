@@ -1,0 +1,55 @@
+// V2 Design Tokens — quieter / restrained product register
+$v2-design-width: 1920px;
+$v2-design-height: 1080px;
+
+// Background layers (tighter, flatter)
+$v2-bg: #0c1017;
+$v2-bg-surface: #121820;
+$v2-bg-elevated: #181f2a;
+$v2-bg-muted: #1e2633;
+
+// Border (lower contrast)
+$v2-border: #252f3d;
+$v2-border-subtle: #1a222d;
+$v2-border-hover: #323f50;
+
+// Text
+$v2-text: #e2e8f0;
+$v2-text-secondary: #8b9cb0;
+$v2-text-muted: #5c6b7e;
+
+// Semantic — desaturated ~75%
+$v2-accent: #4ade80;
+$v2-accent-dim: rgba(74, 222, 128, 0.08);
+$v2-info: #7dd3fc;
+$v2-warning: #d4a843;
+$v2-danger: #e08b8b;
+$v2-neutral: #8b9cb0;
+$v2-purple: #b4a0e0;
+$v2-pink: #d4a0b8;
+
+// Chart / sparkline default
+$v2-chart-muted: #5c6b7e;
+
+// Typography
+$v2-font: system-ui, -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+
+// Radius & spacing
+$v2-radius-sm: 4px;
+$v2-radius-md: 6px;
+$v2-radius-lg: 8px;
+
+$v2-space-xs: 4px;
+$v2-space-sm: 8px;
+$v2-space-md: 12px;
+$v2-space-lg: 16px;
+$v2-space-xl: 20px;
+$v2-space-xxl: 24px;
+
+// Motion — minimal
+$v2-transition: 150ms ease-out;
+
+// Z-index scale
+$v2-z-panel: 10;
+$v2-z-header: 20;
+$v2-z-modal: 50;

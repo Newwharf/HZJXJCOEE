@@ -11,7 +11,7 @@ const routes: RouteRecordRaw[] = [
     name: 'Dashboard',
     component: () => import('@/views/Dashboard/index.vue'),
     meta: {
-      title: 'OEE 统计大屏',
+      title: 'OEE大屏',
     },
   },
   {
@@ -32,7 +32,7 @@ const router = createRouter({
 router.beforeEach((to) => {
   const title = to.meta.title as string | undefined
   if (title) {
-    document.title = `${title} - 杭州机械局统计平台`
+    document.title = title
   }
 })
 

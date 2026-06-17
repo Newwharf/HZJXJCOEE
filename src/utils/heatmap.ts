@@ -18,12 +18,21 @@ function minutesToTime(minutes: number): string {
   return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`
 }
 
-export function getHeatmapMinutesPerColumn(dayStart: string, dayEnd: string): number {
-  return (timeToMinutes(dayEnd) - timeToMinutes(dayStart)) / HEATMAP_GRID_COLS
+export function getHeatmapMinutesPerColumn(
+  dayStart: string,
+  dayEnd: string,
+  gridCols = HEATMAP_GRID_COLS,
+): number {
+  return (timeToMinutes(dayEnd) - timeToMinutes(dayStart)) / gridCols
 }
 
-export function getHeatmapSlotMinutes(dayStart: string, dayEnd: string): number {
-  return (timeToMinutes(dayEnd) - timeToMinutes(dayStart)) / HEATMAP_TOTAL_CELLS
+export function getHeatmapSlotMinutes(
+  dayStart: string,
+  dayEnd: string,
+  gridCols = HEATMAP_GRID_COLS,
+  gridRows = HEATMAP_GRID_ROWS,
+): number {
+  return (timeToMinutes(dayEnd) - timeToMinutes(dayStart)) / (gridCols * gridRows)
 }
 
 export function buildHeatmapCells(
@@ -31,13 +40,16 @@ export function buildHeatmapCells(
   eventDetails: Record<string, TimelineEventDetail>,
   dayStart = '08:00',
   dayEnd = '20:00',
+  gridCols = HEATMAP_GRID_COLS,
+  gridRows = HEATMAP_GRID_ROWS,
 ): HeatmapCell[] {
   const startMin = timeToMinutes(dayStart)
   const endMin = timeToMinutes(dayEnd)
-  const slotMinutes = getHeatmapSlotMinutes(dayStart, dayEnd)
+  const totalCells = gridCols * gridRows
+  const slotMinutes = getHeatmapSlotMinutes(dayStart, dayEnd, gridCols, gridRows)
   const cells: HeatmapCell[] = []
 
-  for (let i = 0; i < HEATMAP_TOTAL_CELLS; i++) {
+  for (let i = 0; i < totalCells; i++) {
     const slotStart = startMin + i * slotMinutes
     const slotEnd = Math.min(slotStart + slotMinutes, endMin)
     const midpoint = slotStart + (slotEnd - slotStart) / 2

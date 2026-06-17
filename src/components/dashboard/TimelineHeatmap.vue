@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, ref } from 'vue'
+import { computed, inject, onMounted, onUnmounted, ref } from 'vue'
 import type { TimelineSegment, TimelineEventDetail, HeatmapCell } from '@/types/oee'
 import { HEATMAP_COLORS, HEATMAP_LABELS, HEATMAP_LEGEND } from '@/constants/heatmap'
 import {
@@ -12,20 +12,50 @@ import {
 } from '@/utils/heatmap'
 import { timeToMinutes } from '@/utils/time'
 import { V2_HEATMAP_COLORS } from '@/constants/dashboardV2ChartTheme'
+import { getV3HeatmapColors } from '@/constants/dashboardV3ChartTheme'
+import { DASHBOARD_V3_THEME_KEY } from '@/composables/useDashboardV3Theme'
 
-const props = defineProps<{
-  segments: TimelineSegment[]
-  eventDetails: Record<string, TimelineEventDetail>
-  dayStart?: string
-  dayEnd?: string
-  variant?: 'default' | 'muted'
-}>()
+const props = withDefaults(
+  defineProps<{
+    segments: TimelineSegment[]
+    eventDetails: Record<string, TimelineEventDetail>
+    dayStart?: string
+    dayEnd?: string
+    variant?: 'default' | 'muted' | 'v3'
+    gridCols?: number
+    gridRows?: number
+    showLegend?: boolean
+    timeMarkInterval?: number
+    /** 仅按容器宽度计算方块尺寸，避免被高度限制 */
+    sizeByWidth?: boolean
+    minCellSize?: number
+    maxCellSize?: number
+    /** 高度随内容收缩，不占满父容器（用于事件分布等复合卡片） */
+    autoHeight?: boolean
+  }>(),
+  {
+    dayStart: '08:00',
+    dayEnd: '20:00',
+    variant: 'default',
+    showLegend: true,
+    timeMarkInterval: 120,
+    sizeByWidth: false,
+    minCellSize: 4,
+    autoHeight: false,
+  },
+)
 
 const isMuted = computed(() => props.variant === 'muted')
+const isV3 = computed(() => props.variant === 'v3')
+const themeContext = inject(DASHBOARD_V3_THEME_KEY, null)
 
-const heatmapColors = computed(() =>
-  isMuted.value ? V2_HEATMAP_COLORS : HEATMAP_COLORS,
-)
+const heatmapColors = computed(() => {
+  if (props.variant === 'v3') {
+    return getV3HeatmapColors(themeContext?.theme.value ?? 'dark')
+  }
+  if (props.variant === 'muted') return V2_HEATMAP_COLORS
+  return HEATMAP_COLORS
+})
 
 const wrapRef = ref<HTMLElement | null>(null)
 const cellSize = ref(8)
@@ -34,8 +64,11 @@ const tooltipPos = ref({ x: 0, y: 0 })
 
 let resizeObserver: ResizeObserver | null = null
 
-const dayStart = computed(() => props.dayStart ?? '08:00')
-const dayEnd = computed(() => props.dayEnd ?? '20:00')
+const dayStart = computed(() => props.dayStart)
+const dayEnd = computed(() => props.dayEnd)
+
+const gridCols = computed(() => props.gridCols ?? HEATMAP_GRID_COLS)
+const gridRows = computed(() => props.gridRows ?? HEATMAP_GRID_ROWS)
 
 const cells = computed(() =>
   buildHeatmapCells(
@@ -43,24 +76,26 @@ const cells = computed(() =>
     props.eventDetails,
     dayStart.value,
     dayEnd.value,
+    gridCols.value,
+    gridRows.value,
   ),
 )
 
 const timeMarks = computed(() =>
-  getHeatmapTimeMarks(dayStart.value, dayEnd.value),
+  getHeatmapTimeMarks(dayStart.value, dayEnd.value, props.timeMarkInterval),
 )
 
 const gridWidth = computed(
-  () => HEATMAP_GRID_COLS * cellSize.value + (HEATMAP_GRID_COLS - 1) * HEATMAP_GAP,
+  () => gridCols.value * cellSize.value + (gridCols.value - 1) * HEATMAP_GAP,
 )
 
 const gridHeight = computed(
-  () => HEATMAP_GRID_ROWS * cellSize.value + (HEATMAP_GRID_ROWS - 1) * HEATMAP_GAP,
+  () => gridRows.value * cellSize.value + (gridRows.value - 1) * HEATMAP_GAP,
 )
 
 const gridStyle = computed(() => ({
-  gridTemplateColumns: `repeat(${HEATMAP_GRID_COLS}, ${cellSize.value}px)`,
-  gridTemplateRows: `repeat(${HEATMAP_GRID_ROWS}, ${cellSize.value}px)`,
+  gridTemplateColumns: `repeat(${gridCols.value}, ${cellSize.value}px)`,
+  gridTemplateRows: `repeat(${gridRows.value}, ${cellSize.value}px)`,
   gridAutoFlow: 'column' as const,
   gap: `${HEATMAP_GAP}px`,
   width: `${gridWidth.value}px`,
@@ -68,7 +103,7 @@ const gridStyle = computed(() => ({
 }))
 
 const columnTicks = computed(() =>
-  Array.from({ length: HEATMAP_GRID_COLS + 1 }, (_, i) => i),
+  Array.from({ length: gridCols.value + 1 }, (_, i) => i),
 )
 
 function updateCellSize() {
@@ -77,9 +112,12 @@ function updateCellSize() {
 
   const maxW = wrap.clientWidth
   const maxH = wrap.clientHeight
-  const sizeByW = (maxW - (HEATMAP_GRID_COLS - 1) * HEATMAP_GAP) / HEATMAP_GRID_COLS
-  const sizeByH = (maxH - (HEATMAP_GRID_ROWS - 1) * HEATMAP_GAP) / HEATMAP_GRID_ROWS
-  cellSize.value = Math.max(4, Math.floor(Math.min(sizeByW, sizeByH)))
+  const sizeByW = (maxW - (gridCols.value - 1) * HEATMAP_GAP) / gridCols.value
+  const sizeByH = (maxH - (gridRows.value - 1) * HEATMAP_GAP) / gridRows.value
+  const rawSize = props.sizeByWidth ? sizeByW : Math.min(sizeByW, sizeByH)
+  const floored = Math.floor(rawSize)
+  const capped = props.maxCellSize != null ? Math.min(floored, props.maxCellSize) : floored
+  cellSize.value = Math.max(props.minCellSize, capped)
 }
 
 function getColumnLeft(column: number) {
@@ -88,7 +126,7 @@ function getColumnLeft(column: number) {
 
 function getMarkPosition(time: string) {
   const offset = timeToMinutes(time) - timeToMinutes(dayStart.value)
-  const minutesPerColumn = getHeatmapMinutesPerColumn(dayStart.value, dayEnd.value)
+  const minutesPerColumn = getHeatmapMinutesPerColumn(dayStart.value, dayEnd.value, gridCols.value)
   const column = offset / minutesPerColumn
   return getColumnLeft(column)
 }
@@ -124,8 +162,15 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="timeline-heatmap" :class="{ 'timeline-heatmap--muted': isMuted }">
-    <div class="timeline-heatmap__legend">
+  <div
+    class="timeline-heatmap"
+    :class="{
+      'timeline-heatmap--muted': isMuted,
+      'timeline-heatmap--v3': isV3,
+      'timeline-heatmap--auto-height': autoHeight,
+    }"
+  >
+    <div v-if="showLegend" class="timeline-heatmap__legend">
       <span
         v-for="type in HEATMAP_LEGEND"
         :key="type"
@@ -211,6 +256,8 @@ onUnmounted(() => {
 </template>
 
 <style scoped lang="scss">
+@use '@/styles/dashboard-v3/variables' as *;
+
 .timeline-heatmap {
   display: flex;
   flex-direction: column;
@@ -318,6 +365,57 @@ onUnmounted(() => {
 
   .timeline-heatmap__mark {
     color: #64748b;
+  }
+}
+
+.timeline-heatmap--v3 {
+  .timeline-heatmap__legend-item {
+    color: $v3-text-secondary;
+    font-size: 10px;
+  }
+
+  .timeline-heatmap__cell {
+    border-color: $v3-heatmap-cell-border;
+    border-radius: 4px;
+    opacity: 0.95;
+
+    &:hover {
+      box-shadow: 0 0 0 1px $v3-control-focus-border;
+      filter: brightness(1.1);
+    }
+  }
+
+  .timeline-heatmap__axis {
+    border-top-color: $v3-heatmap-axis;
+  }
+
+  .timeline-heatmap__tick {
+    background: $v3-heatmap-tick;
+  }
+
+  .timeline-heatmap__mark {
+    color: $v3-text-secondary;
+    font-size: 11px;
+  }
+}
+
+.timeline-heatmap--auto-height {
+  height: auto;
+  min-height: 0;
+  overflow: visible;
+
+  .timeline-heatmap__grid-wrap {
+    flex: 0 0 auto;
+    height: auto;
+    min-height: 0;
+    overflow: visible;
+    align-items: flex-start;
+    justify-content: stretch;
+  }
+
+  .timeline-heatmap__board {
+    width: 100%;
+    max-height: none;
   }
 }
 

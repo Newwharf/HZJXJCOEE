@@ -6,10 +6,16 @@ const props = withDefaults(
     data: number[]
     color?: string
     delay?: number
+    /** 固定 2px 线宽，避免 SVG 拉伸导致曲线过粗 */
+    fixedStroke?: boolean
+    /** 仅显示渐变填充，不绘制曲线描边 */
+    fillOnly?: boolean
   }>(),
   {
     color: '#00d4ff',
     delay: 0,
+    fixedStroke: false,
+    fillOnly: false,
   },
 )
 
@@ -85,6 +91,7 @@ const chartStyle = computed(() => ({
 }))
 
 async function measurePath() {
+  if (props.fillOnly) return
   await nextTick()
   pathLength.value = lineRef.value?.getTotalLength() ?? 0
 }
@@ -103,11 +110,11 @@ watch(linePath, measurePath)
   >
     <defs>
       <linearGradient :id="gradientId" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" :stop-color="color" stop-opacity="0.45" />
+        <stop offset="0%" :stop-color="color" :stop-opacity="fillOnly ? 0.55 : 0.45" />
         <stop offset="100%" :stop-color="color" stop-opacity="0" />
       </linearGradient>
-      <filter :id="`${gradientId}-glow`" x="-20%" y="-20%" width="140%" height="140%">
-        <feGaussianBlur stdDeviation="1.2" result="blur" />
+      <filter v-if="!fillOnly" :id="`${gradientId}-glow`" x="-20%" y="-20%" width="140%" height="140%">
+        <feGaussianBlur :stdDeviation="fixedStroke ? 0.6 : 1.2" result="blur" />
         <feMerge>
           <feMergeNode in="blur" />
           <feMergeNode in="SourceGraphic" />
@@ -121,19 +128,20 @@ watch(linePath, measurePath)
       :fill="`url(#${gradientId})`"
     />
     <path
-      v-if="linePath"
+      v-if="linePath && !fillOnly"
       ref="lineRef"
       class="mini-sparkline__line"
+      :class="{ 'mini-sparkline__line--fixed': fixedStroke }"
       :d="linePath"
       fill="none"
       :stroke="color"
-      stroke-width="2"
+      :stroke-width="fixedStroke ? 0.5 : 2"
       stroke-linecap="round"
       stroke-linejoin="round"
-      :filter="`url(#${gradientId}-glow)`"
+      :filter="fixedStroke ? undefined : `url(#${gradientId}-glow)`"
     />
     <circle
-      v-if="lastPoint"
+      v-if="lastPoint && !fixedStroke && !fillOnly"
       class="mini-sparkline__dot"
       :cx="lastPoint.x"
       :cy="lastPoint.y"
@@ -166,6 +174,13 @@ watch(linePath, measurePath)
     sparkline-line-enter 0.85s cubic-bezier(0.4, 0, 0.2, 1) forwards,
     sparkline-line-glow 0.85s ease forwards;
   animation-delay: var(--anim-delay), var(--anim-delay);
+
+  &--fixed {
+    stroke-dasharray: none;
+    stroke-dashoffset: 0;
+    opacity: 0.9;
+    animation: none;
+  }
 }
 
 .mini-sparkline__dot {

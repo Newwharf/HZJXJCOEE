@@ -90,6 +90,14 @@ export interface FocusMetricDayChanges {
   avgProductionChangeTime: MetricDayChange
 }
 
+export interface EventDistributionStat {
+  type: HeatmapEventType
+  durationMinutes: number
+  percent: number
+  compareDurationMinutes?: number
+  comparePercent?: number
+}
+
 export interface OeeMetrics {
   availabilityRate: number
   equipmentStatus: EquipmentStatus
@@ -112,6 +120,8 @@ export interface OeeMetrics {
   workingMinutes: number
   faultDowntime: number
   downtimeAnalysis: DowntimeItem[]
+  unplannedDowntimeDayChange?: number
   timeline: TimelineSegment[]
   eventDetails: Record<string, TimelineEventDetail>
+  eventDistributionStats?: EventDistributionStat[]
 }

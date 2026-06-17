@@ -1,0 +1,36 @@
+@use './variables' as *;
+@use './themes';
+
+.dashboard-v3-screen {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background: $v3-bg;
+  font-family: $v3-font;
+  font-size: 14px;
+  line-height: 1.5;
+  color: $v3-text;
+  -webkit-font-smoothing: antialiased;
+  transition: background $v3-transition, color $v3-transition;
+}
+
+.dashboard-v3-scale {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: $v3-design-width;
+  height: $v3-design-height;
+  transform-origin: center center;
+  z-index: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dashboard-v3-screen *,
+  .dashboard-v3-screen *::before,
+  .dashboard-v3-screen *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

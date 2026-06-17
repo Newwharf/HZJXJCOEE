@@ -13,6 +13,7 @@ const props = defineProps<{
   visible: boolean
   event?: TimelineDetailItem | null
   initialCamera?: CameraType
+  variant?: 'default' | 'v3'
 }>()
 
 const emit = defineEmits<{
@@ -72,6 +73,7 @@ watch(
     <div
       v-if="visible"
       class="event-video-modal"
+      :class="{ 'event-video-modal--v3': variant === 'v3' }"
       @click.self="closeModal"
     >
       <div class="event-video-modal__panel">
@@ -127,6 +129,8 @@ watch(
 </template>
 
 <style scoped lang="scss">
+@use '@/styles/dashboard-v3/variables' as *;
+
 .event-video-modal {
   position: fixed;
   inset: 0;
@@ -243,5 +247,74 @@ watch(
   padding: 0 16px 14px;
   font-size: 11px;
   color: rgba(232, 244, 255, 0.45);
+}
+
+.event-video-modal--v3 {
+  background: $v3-overlay;
+  backdrop-filter: blur(6px);
+
+  .event-video-modal__panel {
+    background: $v3-modal-panel-bg;
+    border: 1px solid $v3-modal-panel-border;
+    border-radius: 8px;
+    box-shadow: $v3-shadow-lg;
+  }
+
+  .event-video-modal__header {
+    border-bottom: 1px solid $v3-modal-header-border;
+  }
+
+  .event-video-modal__title {
+    color: $v3-text;
+  }
+
+  .event-video-modal__subtitle {
+    color: $v3-text-secondary;
+  }
+
+  .event-video-modal__close {
+    border: 1px solid $v3-control-border;
+    border-radius: 6px;
+    background: $v3-control-bg;
+    color: $v3-text-secondary;
+
+    &:hover {
+      border-color: $v3-control-border-hover;
+      background: $v3-control-bg-hover;
+      color: $v3-text;
+    }
+  }
+
+  .event-video-modal__camera-btn {
+    padding: 6px 14px;
+    border: 1px solid $v3-control-border;
+    border-radius: 6px;
+    background: $v3-control-bg;
+    color: $v3-text-secondary;
+    font-size: 13px;
+
+    &:hover {
+      border-color: $v3-control-border-hover;
+      background: $v3-control-bg-hover;
+      color: $v3-text;
+    }
+
+    &--active {
+      border-color: $v3-control-focus-border;
+      background: $v3-neon-green-soft;
+      color: $v3-neon-green;
+      box-shadow: 0 0 10px $v3-neon-green-soft;
+    }
+  }
+
+  .event-video-modal__video {
+    border-radius: 6px;
+    border: 1px solid $v3-modal-video-border;
+  }
+
+  .event-video-modal__footer {
+    font-size: 12px;
+    color: $v3-text-muted;
+  }
 }
 </style>

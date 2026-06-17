@@ -22,6 +22,14 @@ const routes: RouteRecordRaw[] = [
       title: 'OEE 统计大屏（优化版）',
     },
   },
+  {
+    path: '/dashboard-v3',
+    name: 'DashboardV3',
+    component: () => import('@/views/DashboardV3/index.vue'),
+    meta: {
+      title: 'Machining OEE Dashboard',
+    },
+  },
 ]
 
 const router = createRouter({

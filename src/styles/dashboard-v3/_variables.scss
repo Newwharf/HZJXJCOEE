@@ -1,0 +1,127 @@
+// V3 Design Tokens — Machining OEE Dashboard
+$v3-design-width: 1920px;
+$v3-design-height: 1080px;
+
+// Theme tokens (runtime via CSS variables in _themes.scss)
+$v3-bg: var(--v3-bg);
+$v3-bg-surface: var(--v3-bg-surface);
+$v3-bg-elevated: var(--v3-bg-elevated);
+$v3-bg-card: var(--v3-bg-card);
+
+$v3-border: var(--v3-border);
+$v3-border-subtle: var(--v3-border-subtle);
+$v3-border-hover: var(--v3-border-hover);
+
+$v3-text: var(--v3-text);
+$v3-text-secondary: var(--v3-text-secondary);
+$v3-text-muted: var(--v3-text-muted);
+$v3-text-bright: var(--v3-text-bright);
+
+$v3-control-bg: var(--v3-control-bg);
+$v3-control-bg-hover: var(--v3-control-bg-hover);
+$v3-control-border: var(--v3-control-border);
+$v3-control-border-hover: var(--v3-control-border-hover);
+$v3-control-focus-border: var(--v3-control-focus-border);
+$v3-control-focus-glow: var(--v3-control-focus-glow);
+
+$v3-neon-green: var(--v3-neon-green);
+$v3-neon-green-dim: var(--v3-neon-green-dim);
+$v3-neon-green-glow: var(--v3-neon-green-glow);
+$v3-neon-green-soft: var(--v3-neon-green-soft);
+$v3-neon-green-border: var(--v3-neon-green-border);
+$v3-neon-green-hover-bg: var(--v3-neon-green-hover-bg);
+
+$v3-neon-blue: #409eff;
+$v3-neon-purple: #9254de;
+$v3-neon-orange: #fa8c16;
+$v3-neon-cyan: #13c2c2;
+$v3-neon-yellow: #fadb14;
+$v3-neon-pink: #ff6b9d;
+
+$v3-success: $v3-neon-green;
+$v3-warning: $v3-neon-yellow;
+$v3-danger: var(--v3-danger);
+$v3-danger-dim: var(--v3-danger-dim);
+$v3-info: $v3-neon-blue;
+
+$v3-divider: var(--v3-divider);
+$v3-divider-strong: var(--v3-divider-strong);
+$v3-grid-line: var(--v3-grid-line);
+$v3-scrollbar-thumb: var(--v3-scrollbar-thumb);
+
+$v3-overlay: var(--v3-overlay);
+$v3-shadow-lg: var(--v3-shadow-lg);
+$v3-shadow-color: var(--v3-shadow-color);
+
+$v3-heatmap-idle: var(--v3-heatmap-idle);
+$v3-heatmap-cell-border: var(--v3-heatmap-cell-border);
+$v3-heatmap-axis: var(--v3-heatmap-axis);
+$v3-heatmap-tick: var(--v3-heatmap-tick);
+
+$v3-timeline-downtime: var(--v3-timeline-downtime);
+
+$v3-chart-axis: var(--v3-chart-axis);
+$v3-chart-axis-label: var(--v3-chart-axis-label);
+$v3-chart-tooltip-bg: var(--v3-chart-tooltip-bg);
+$v3-chart-tooltip-border: var(--v3-chart-tooltip-border);
+$v3-chart-tooltip-text: var(--v3-chart-tooltip-text);
+$v3-chart-center-value: var(--v3-chart-center-value);
+$v3-chart-center-label: var(--v3-chart-center-label);
+$v3-chart-pie-border: var(--v3-chart-pie-border);
+
+$v3-status-running: var(--v3-status-running);
+$v3-status-running-bg: var(--v3-status-running-bg);
+$v3-status-planned: var(--v3-status-planned);
+$v3-status-planned-bg: var(--v3-status-planned-bg);
+$v3-status-stopped: var(--v3-status-stopped);
+
+$v3-water-back-top: var(--v3-water-back-top);
+$v3-water-back-mid: var(--v3-water-back-mid);
+$v3-water-back-bottom: var(--v3-water-back-bottom);
+$v3-water-front-top: var(--v3-water-front-top);
+$v3-water-front-mid: var(--v3-water-front-mid);
+$v3-water-front-bottom: var(--v3-water-front-bottom);
+$v3-water-crest-top: var(--v3-water-crest-top);
+$v3-water-crest-bottom: var(--v3-water-crest-bottom);
+$v3-water-bubble: var(--v3-water-bubble);
+$v3-water-bubble-alt: var(--v3-water-bubble-alt);
+$v3-water-text-muted: var(--v3-water-text-muted);
+$v3-water-text-subtle: var(--v3-water-text-subtle);
+$v3-water-text-strong: var(--v3-water-text-strong);
+
+$v3-modal-panel-bg: var(--v3-modal-panel-bg);
+$v3-modal-panel-border: var(--v3-modal-panel-border);
+$v3-modal-header-border: var(--v3-modal-header-border);
+$v3-modal-video-border: var(--v3-modal-video-border);
+
+$v3-image-shadow: var(--v3-image-shadow);
+$v3-camera-overlay: var(--v3-camera-overlay);
+$v3-camera-label-bg: var(--v3-camera-label-bg);
+
+// Typography
+$v3-font: 'Inter', 'PingFang SC', 'Microsoft YaHei', system-ui, sans-serif;
+
+// Radius & spacing (static)
+$v3-radius-sm: 6px;
+$v3-radius-md: 8px;
+$v3-radius-lg: 10px;
+
+$v3-space-xs: 4px;
+$v3-space-sm: 8px;
+$v3-space-md: 12px;
+$v3-space-lg: 16px;
+$v3-space-xl: 20px;
+$v3-space-xxl: 24px;
+
+// Layout
+$v3-body-inner-width: $v3-design-width - $v3-space-xxl * 2;
+$v3-main-width-legacy: ($v3-body-inner-width - $v3-space-md) * 0.62;
+$v3-availability-width: ($v3-main-width-legacy - $v3-space-md) / 6;
+
+// Motion
+$v3-transition: 200ms ease-out;
+
+// Z-index
+$v3-z-panel: 10;
+$v3-z-header: 20;
+$v3-z-modal: 50;
